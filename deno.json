@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "lib": ["deno.ns", "dom"]
+    },
+    "tasks": {
+      "test": "deno test --allow-read"
+    }
+  }
+  
