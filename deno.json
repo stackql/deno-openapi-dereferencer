@@ -1,5 +1,7 @@
 {
   "name": "@stackql/deno-openapi-dereferencer",
   "version": "0.1.0",
-  "exports": "./mod.ts"
+  "exports": "./mod.ts",
+  "description": "Deno module for dereferencing and flattening OpenAPI specifications.",
+  "license": "MIT"  
 }

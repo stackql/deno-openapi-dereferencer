@@ -1,4 +1,4 @@
-import { JSONPath } from "https://esm.sh/jsonpath-plus@7.0.0";
+import { JSONPath } from "npm:jsonpath-plus@7.0.0";
 
 /**
  * Dereferences and processes `$ref` properties in an OpenAPI document starting from a specific path.
