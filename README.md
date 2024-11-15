@@ -15,7 +15,12 @@ A Deno module to recursively dereference and flatten OpenAPI specifications. Thi
 To use the module, import it from Deno Land:
 
 ```typescript
-import { dereferenceApi, flattenAllOf, selectFirstOfOneOf, selectFirstOfAnyOf } from "jsr:@stackql/deno-openapi-dereferencer";
+import { 
+    dereferenceApi, 
+    flattenAllOf, 
+    selectFirstOfOneOf, 
+    selectFirstOfAnyOf 
+} from "jsr:@stackql/deno-openapi-dereferencer";
 ```
 
 ### Example Usage

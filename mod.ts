@@ -18,7 +18,12 @@
  * To use this module, import it from JSR:
  *
  * ```typescript
- * import { dereferenceApi, flattenAllOf, selectFirstOfOneOf, selectFirstOfAnyOf } from "jsr:@stackql/deno-openapi-dereferencer";
+ * import { 
+ *  dereferenceApi, 
+ *  flattenAllOf, 
+ *  selectFirstOfOneOf, 
+ *  selectFirstOfAnyOf 
+ * } from "jsr:@stackql/deno-openapi-dereferencer";
  * ```
  *
  * ### Examples
