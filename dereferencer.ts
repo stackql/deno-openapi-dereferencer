@@ -1,5 +1,13 @@
 import { JSONPath } from "https://esm.sh/jsonpath-plus@7.0.0";
 
+/**
+ * Dereferences and processes `$ref` properties in an OpenAPI document starting from a specific path.
+ *
+ * @param {object} apiDoc - The OpenAPI document to process.
+ * @param {string} [startAt="$"] - The JSONPath expression to specify the starting point for dereferencing. Defaults to the root (`"$"`).
+ * @returns {Promise<object>} The dereferenced OpenAPI document.
+ * @throws {Error} If a `$ref` cannot be resolved.
+ */
 export async function dereferenceApi(
   apiDoc: any,
   startAt: string = "$"
@@ -50,6 +58,12 @@ export async function dereferenceApi(
   return dereferencedDoc;
 }
 
+/**
+ * Flattens all `allOf` properties in an OpenAPI document by merging schemas into a single object.
+ *
+ * @param {object} apiDoc - The OpenAPI document to process.
+ * @returns {Promise<object>} The document with `allOf` properties flattened.
+ */
 export async function flattenAllOf(apiDoc: any): Promise<any> {
   async function processAllOf(schema: any): Promise<any> {
     if (!schema || typeof schema !== "object") return schema;
@@ -85,6 +99,12 @@ export async function flattenAllOf(apiDoc: any): Promise<any> {
   return flattenedDoc;
 }
 
+/**
+ * Simplifies `oneOf` arrays in an OpenAPI document by selecting the first schema in each `oneOf` array.
+ *
+ * @param {object} apiDoc - The OpenAPI document to process.
+ * @returns {Promise<object>} The document with `oneOf` properties simplified.
+ */
 export async function selectFirstOfOneOf(apiDoc: any): Promise<any> {
   async function processOneOf(schema: any): Promise<any> {
     if (!schema || typeof schema !== "object") return schema;
@@ -108,6 +128,12 @@ export async function selectFirstOfOneOf(apiDoc: any): Promise<any> {
   return processedDoc;
 }
 
+/**
+ * Simplifies `anyOf` arrays in an OpenAPI document by selecting the first schema in each `anyOf` array.
+ *
+ * @param {object} apiDoc - The OpenAPI document to process.
+ * @returns {Promise<object>} The document with `anyOf` properties simplified.
+ */
 export async function selectFirstOfAnyOf(apiDoc: any): Promise<any> {
   async function processAnyOf(schema: any): Promise<any> {
     if (!schema || typeof schema !== "object") return schema;
@@ -131,6 +157,15 @@ export async function selectFirstOfAnyOf(apiDoc: any): Promise<any> {
   return processedDoc;
 }
 
+/**
+ * Resolves a `$ref` in an OpenAPI document by following the reference path.
+ *
+ * @param {object} obj - The object containing the `$ref` property.
+ * @param {object} api - The OpenAPI document to resolve against.
+ * @returns {Promise<object>} The dereferenced object.
+ * @throws {Error} If the `$ref` cannot be resolved.
+ * @private
+ */
 async function resolveRef(obj: any, api: any): Promise<any> {
   if (obj && obj.$ref) {
     const refPath = obj.$ref.replace(/^#\//, '').split('/');

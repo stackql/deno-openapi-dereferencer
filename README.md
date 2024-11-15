@@ -1,4 +1,4 @@
-# deno-openapi-dereferencer
+# @stackql/deno-openapi-dereferencer
 
 A Deno module to recursively dereference and flatten OpenAPI specifications. This module provides functions to handle `$ref`, `allOf`, `oneOf`, and `anyOf` structures, creating a fully dereferenced and optionally flattened document.
 

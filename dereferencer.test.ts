@@ -4,7 +4,7 @@ import {
   flattenAllOf,
   selectFirstOfOneOf,
   selectFirstOfAnyOf,
-} from "../dereferencer.ts";
+} from "./dereferencer.ts";
 import { read } from "https://deno.land/x/openapi@0.1.0/mod.ts";
 // import yaml from "https://esm.sh/js-yaml@4.1.0";
 
