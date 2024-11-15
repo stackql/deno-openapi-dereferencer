@@ -15,7 +15,7 @@ A Deno module to recursively dereference and flatten OpenAPI specifications. Thi
 To use the module, import it from Deno Land:
 
 ```typescript
-import { dereferenceApi, flattenAllOf, selectFirstOfOneOf, selectFirstOfAnyOf } from "jsr:@stackql/deno-openapi-dereferencer@latest";
+import { dereferenceApi, flattenAllOf, selectFirstOfOneOf, selectFirstOfAnyOf } from "jsr:@stackql/deno-openapi-dereferencer";
 ```
 
 ### Example Usage
@@ -23,7 +23,7 @@ import { dereferenceApi, flattenAllOf, selectFirstOfOneOf, selectFirstOfAnyOf } 
 #### Fully Dereference an OpenAPI Document
 
 ```typescript
-import { dereferenceApi } from "jsr:@stackql/deno-openapi-dereferencer@latest";
+import { dereferenceApi } from "jsr:@stackql/deno-openapi-dereferencer";
 const apiDoc = await Deno.readTextFile("./path/to/openapi.yaml");
 const dereferencedDoc = await dereferenceApi(apiDoc);
 console.log(dereferencedDoc);
@@ -32,7 +32,7 @@ console.log(dereferencedDoc);
 #### Flatten `allOf` Properties
 
 ```typescript
-import { flattenAllOf } from "jsr:@stackql/deno-openapi-dereferencer@latest";
+import { flattenAllOf } from "jsr:@stackql/deno-openapi-dereferencer";
 const flattenedDoc = await flattenAllOf(dereferencedDoc);
 console.log(flattenedDoc);
 ```
