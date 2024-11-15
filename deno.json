@@ -1,11 +1,5 @@
 {
   "name": "@stackql/deno-openapi-dereferencer",
   "version": "0.1.0",
-  "exports": "./mod.ts",
-  "compilerOptions": {
-    "lib": ["deno.ns", "dom"]
-  },
-  "tasks": {
-    "test": "deno test --allow-read"
-  }  
+  "exports": "./mod.ts"
 }
