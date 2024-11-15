@@ -6,11 +6,11 @@ import {
   selectFirstOfAnyOf,
 } from "./dereferencer.ts";
 import { read } from "https://deno.land/x/openapi@0.1.0/mod.ts";
-// import yaml from "https://esm.sh/js-yaml@4.1.0";
 
 // Read the sample OpenAPI document
 const apiDocApps = await read("./tests/docs/apps.yaml");
 const apiDocVpcs = await read("./tests/docs/vpcs.yaml");
+const apiDocBilling = await read("./tests/docs/billing.yaml");
 
 // Test dereferenceApi function to ensure all $ref's are dereferenced
 Deno.test("should fully dereference an OpenAPI document", async () => {
@@ -92,4 +92,44 @@ Deno.test("should flatten allOf properties in an OpenAPI document", async () => 
     assertEquals("created_at" in vpcsProperties, true, "The 'created_at' property should be present in flattened vpcs items.");
 
     assertEquals("region" in vpcsProperties, true, "The 'region' property should be present in flattened vpcs items.");
-  });
+});
+
+// Test ignorePaths in dereferenceApi function, should fail without ignorePaths
+Deno.test("Negative Test: dereferenceApi should fail without ignorePaths", async () => {
+  try {
+    await dereferenceApi(apiDocBilling);
+    console.error("Test failed: Expected an error due to unresolved $ref in x-stackQL-resources.");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Test passed: Caught expected error:", error.message);
+    } else {
+      console.error("Test failed: Caught unexpected error type");
+    }
+  }
+});
+
+// Test ignorePaths in dereferenceApi function, should succeed with ignorePaths
+Deno.test("Positive Test: dereferenceApi should succeed with ignorePaths", async () => {
+  const ignorePaths = ["$.components.x-stackQL-resources"];
+  try {
+    const dereferencedDoc = await dereferenceApi(apiDocBilling, "$", ignorePaths);
+    
+    // Check if a known ref in `components` is resolved
+    if (!dereferencedDoc.components.schemas["billing.v1.CostList"].properties.metadata.properties.next) {
+      console.error("Test failed: Expected metadata next property to be resolved.");
+    }
+
+    // Check if a known ref in `paths` is resolved
+    if (!dereferencedDoc.paths["/billing/v1/costs"].get.responses["200"].content["application/json"].schema.properties.data) {
+      console.error("Test failed: Expected data property in paths to be resolved.");
+    }
+
+    console.log("Test passed: Dereferencing succeeded with ignorePaths.");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Test failed: Unexpected error with ignorePaths:", error.message);
+    } else {
+      console.error("Test failed: Caught unexpected error type");
+    }
+  }
+});  

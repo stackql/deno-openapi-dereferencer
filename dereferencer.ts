@@ -1,37 +1,44 @@
 import { JSONPath } from "npm:jsonpath-plus@7.0.0";
 
 /**
- * Dereferences and processes `$ref` properties in an OpenAPI document starting from a specific path.
+ * Dereferences and processes `$ref` properties in an OpenAPI document starting from a specific path, with an option to ignore certain paths.
  *
  * @param {object} apiDoc - The OpenAPI document to process.
  * @param {string} [startAt="$"] - The JSONPath expression to specify the starting point for dereferencing. Defaults to the root (`"$"`).
+ * @param {string[]} [ignorePaths=[]] - An array of JSONPath expressions specifying paths to ignore during dereferencing.
  * @returns {Promise<object>} The dereferenced OpenAPI document.
  * @throws {Error} If a `$ref` cannot be resolved.
  */
 export async function dereferenceApi(
   apiDoc: any,
-  startAt: string = "$"
+  startAt: string = "$",
+  ignorePaths: string[] = []
 ): Promise<any> {
   const dereferencedDoc = JSON.parse(JSON.stringify(apiDoc)); // Deep copy to avoid mutation
 
-  async function processSchema(schema: any): Promise<any> {
+  async function processSchema(schema: any, currentPath: string = ""): Promise<any> {
     if (!schema) return schema;
- 
+
+    // Check if the current path is in the ignorePaths list
+    if (ignorePaths.some(ignorePath => JSONPath({ path: ignorePath, json: dereferencedDoc }).includes(schema))) {
+      return schema; // Skip dereferencing for paths in ignorePaths
+    }
+
     // Dereference `$ref`
     if (schema.$ref) {
       schema = await resolveRef(schema, apiDoc);
     }
-  
+
     // Recursively process nested objects
     if (typeof schema === "object" && schema !== null) {
       for (const key in schema) {
-        schema[key] = await processSchema(schema[key]);
+        schema[key] = await processSchema(schema[key], `${currentPath}/${key}`);
       }
     }
-  
+
     return schema;
   }
- 
+
   // Use JSONPath to get the target schema using `startAt`
   const startSchema = JSONPath({
     path: startAt,
@@ -176,12 +183,12 @@ async function resolveRef(obj: any, api: any): Promise<any> {
     }
     return await resolveRef(derefObj, api); // Recursively dereference nested $ref
   }
-  
+
   if (typeof obj === "object" && obj !== null) {
     for (const key in obj) {
       obj[key] = await resolveRef(obj[key], api);
     }
   }
-  
+
   return obj;
 }
